@@ -1,0 +1,23 @@
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+      args:
+        BUILD_NUMBER: "123"
+        GIT_COMMIT: "abcdefg"
+    image: jenkins-api
+    # ports:
+    #   - "3001:3001"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    image: jenkins-web
+    ports:
+      - "8081:80"
+    depends_on:
+      - api
+    restart: unless-stopped

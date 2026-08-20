@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Jenkins Service Monitor</title>
+
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Jenkins Service Monitor</title>
+
+        <style>
+          * {
+            box-sizing: border-box;
+          }
+
+          body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f5f7fb;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #1f2937;
+          }
+
+          .dashboard {
+            width: 90%;
+            max-width: 720px;
+          }
+
+          .title {
+            margin: 0 0 8px;
+            font-size: 34px;
+            color: #111827;
+          }
+
+          .subtitle {
+            margin: 0 0 30px;
+            color: #6b7280;
+            font-size: 16px;
+          }
+
+          .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+          }
+
+          .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 22px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+          }
+
+          .card-header h2 {
+            margin: 0;
+            font-size: 22px;
+          }
+
+          .status-badge {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+            padding: 7px 14px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: bold;
+          }
+
+          .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid #f0f1f3;
+          }
+
+          .row:last-of-type {
+            border-bottom: none;
+          }
+
+          .label {
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 600;
+          }
+
+          .value {
+            color: #111827;
+            font-size: 15px;
+            font-weight: bold;
+            text-align: right;
+          }
+
+          #error {
+            color: #dc2626;
+            margin: 15px 0 0;
+            font-weight: bold;
+          }
+
+          .footer {
+            margin-top: 18px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 13px;
+          }
+        </style>
+      </head>
+
+      <body>
+        <main class="dashboard">
+          <h1 class="title">Jenkins Two Services</h1>
+
+          <p class="subtitle">
+            Live communication between Web and API services
+          </p>
+
+          <section class="card">
+            <div class="card-header">
+              <h2>API Monitor</h2>
+              <span class="status-badge" id="status"> Loading... </span>
+            </div>
+
+            <div class="row">
+              <span class="label">Service</span>
+              <span class="value" id="service">Loading...</span>
+            </div>
+
+            <div class="row">
+              <span class="label">Message</span>
+              <span class="value" id="message">Loading...</span>
+            </div>
+
+            <div class="row">
+              <span class="label">Server Time</span>
+              <span class="value" id="time">Loading...</span>
+            </div>
+
+            <p id="error"></p>
+          </section>
+        </main>
+
+        <script src="./script.js"></script>
+      </body>
+    </html>
+  </head>
+</html>

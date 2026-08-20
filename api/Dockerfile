@@ -1,0 +1,19 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+ARG BUILD_NUMBER
+ARG GIT_COMMIT
+
+ENV BUILD_NUMBER=$BUILD_NUMBER
+ENV GIT_COMMIT=$GIT_COMMIT
+
+EXPOSE 3001
+
+CMD ["npm", "start"]
