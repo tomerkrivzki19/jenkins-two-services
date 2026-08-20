@@ -8,9 +8,19 @@ pipeline {
             }
         }
 
-        stage('Test Jenkins Connection') {
+        stage('Install API Dependencies') {
             steps {
-                echo 'Jenkins successfully connected to GitHub'
+                dir('api') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('API Tests') {
+            steps {
+                dir('api') {
+                    sh 'npm test'
+                }
             }
         }
     }
