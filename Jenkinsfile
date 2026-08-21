@@ -57,19 +57,19 @@ pipeline {
                     docker network create jenkins-test-network
 
                     docker run -d \
-                    --name test-api \
-                    --network jenkins-test-network \
-                    --network-alias api \
-                    jenkins-api:$BUILD_NUMBER
+                     --name test-api \
+                     --network jenkins-test-network \
+                     --network-alias api \
+                     jenkins-api:$BUILD_NUMBER
 
                     docker run -d \
-                    --name test-web \
-                    --network jenkins-test-network \
-                    jenkins-web:$BUILD_NUMBER
+                     --name test-web \
+                     --network jenkins-test-network \
+                     jenkins-web:$BUILD_NUMBER
 
                     sleep 5
 
-                    docker exec test-web wget -qO- http://localhost/api/data
+                    docker exec test-web wget -qO- http://127.0.0.1:80/api/data
 
                     docker rm -f test-web test-api
                     docker network rm jenkins-test-network
