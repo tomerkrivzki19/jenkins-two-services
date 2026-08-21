@@ -30,7 +30,7 @@ docker run -d \
   --name "api-${TARGET}" \
   --network "$TARGET_NETWORK" \
   --network-alias api \
-  -e FORCE_HEALTH_FAIL=true \
+#   -e FORCE_HEALTH_FAIL=true \
   "jenkins-api:${BUILD_NUMBER}"
 
 echo "Building WEB ${TARGET}..."
