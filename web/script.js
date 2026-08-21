@@ -41,18 +41,33 @@ async function getHealthData() {
 
 async function getDeploymentSlot() {
   try {
-    const response = await fetch("/deployment.json");
+    const response = await fetch("/deployment.json", {
+      cache: "no-store",
+    });
+
     const deployment = await response.json();
 
-    document.getElementById("deployment-slot").textContent =
-      deployment.slot.toUpperCase();
+    const slot = deployment.slot.toLowerCase();
+
+    document.getElementById("deployment-slot").textContent = slot.toUpperCase();
+
+    const light = document.getElementById("slot-light");
+
+    light.classList.remove("blue", "green");
+
+    if (slot === "blue") {
+      light.classList.add("blue");
+    }
+
+    if (slot === "green") {
+      light.classList.add("green");
+    }
   } catch (error) {
     console.error("Failed to get deployment slot:", error);
 
     document.getElementById("deployment-slot").textContent = "UNKNOWN";
   }
 }
-
 getApiData();
 getHealthData();
 getDeploymentSlot();

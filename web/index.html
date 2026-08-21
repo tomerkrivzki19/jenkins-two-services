@@ -4,192 +4,363 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Jenkins Service Monitor</title>
+    <title>Jenkins Deployment Monitor</title>
 
-    <!doctype html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-        <title>Jenkins Service Monitor</title>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #eef2f6;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #1f2937;
+        padding: 40px 20px;
+      }
 
-        <style>
-          * {
-            box-sizing: border-box;
-          }
+      .dashboard {
+        width: 100%;
+        max-width: 980px;
+        margin: 0 auto;
+      }
 
-          body {
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #f5f7fb;
-            font-family: Arial, Helvetica, sans-serif;
-            color: #1f2937;
-          }
+      .top-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 28px;
+        gap: 20px;
+      }
 
-          .dashboard {
-            width: 90%;
-            max-width: 720px;
-          }
+      .title {
+        margin: 0;
+        font-size: 34px;
+        color: #111827;
+      }
 
-          .title {
-            margin: 0 0 8px;
-            font-size: 34px;
-            color: #111827;
-          }
+      .subtitle {
+        margin: 8px 0 0;
+        color: #6b7280;
+        font-size: 15px;
+      }
 
-          .subtitle {
-            margin: 0 0 30px;
-            color: #6b7280;
-            font-size: 16px;
-          }
+      .system-label {
+        background: #ffffff;
+        border: 1px solid #dfe5ec;
+        border-radius: 10px;
+        padding: 10px 16px;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: bold;
+      }
 
-          .card {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-          }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
 
-          .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 22px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #e5e7eb;
-          }
+      .card {
+        background: #ffffff;
+        border: 1px solid #dfe5ec;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+      }
 
-          .card-header h2 {
-            margin: 0;
-            font-size: 22px;
-          }
+      .card.full-width {
+        grid-column: 1 / -1;
+      }
 
-          .status-badge {
-            background: #dcfce7;
-            color: #15803d;
-            border: 1px solid #bbf7d0;
-            padding: 7px 14px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: bold;
-          }
+      .card-header {
+        min-height: 66px;
+        padding: 18px 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8fafc;
+        border-bottom: 1px solid #e5e7eb;
+      }
 
-          .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 0;
-            border-bottom: 1px solid #f0f1f3;
-          }
+      .card-header h2 {
+        margin: 0;
+        font-size: 18px;
+        color: #1e293b;
+      }
 
-          .row:last-of-type {
-            border-bottom: none;
-          }
+      .card-body {
+        padding: 8px 22px;
+      }
 
-          .label {
-            color: #6b7280;
-            font-size: 14px;
-            font-weight: 600;
-          }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        min-height: 58px;
+        border-bottom: 1px solid #eef2f7;
+      }
 
-          .value {
-            color: #111827;
-            font-size: 15px;
-            font-weight: bold;
-            text-align: right;
-          }
+      .row:last-child {
+        border-bottom: none;
+      }
 
-          #error {
-            color: #dc2626;
-            margin: 15px 0 0;
-            font-weight: bold;
-          }
+      .label {
+        font-size: 12px;
+        letter-spacing: 0.7px;
+        color: #64748b;
+        font-weight: bold;
+      }
 
-          .footer {
-            margin-top: 18px;
-            text-align: center;
-            color: #9ca3af;
-            font-size: 13px;
-          }
-        </style>
-      </head>
+      .value {
+        font-size: 14px;
+        color: #111827;
+        font-weight: bold;
+        text-align: right;
+        word-break: break-word;
+      }
 
-      <body>
-        <main class="dashboard">
-          <h1 class="title">Jenkins Two Services</h1>
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 12px;
+        border-radius: 8px;
+        background: #ecfdf3;
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
 
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #22c55e;
+      }
+
+      .deployment-box {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .slot-light {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: #cbd5e1;
+        border: 2px solid rgba(15, 23, 42, 0.12);
+        box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.35);
+        transition: all 0.3s ease;
+      }
+
+      .slot-name {
+        font-size: 16px;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+      }
+
+      .slot-light.blue {
+        background: #3b82f6;
+        box-shadow:
+          0 0 12px rgba(59, 130, 246, 0.35),
+          inset 0 0 0 3px rgba(255, 255, 255, 0.25);
+      }
+
+      .slot-light.green {
+        background: #22c55e;
+        box-shadow:
+          0 0 12px rgba(34, 197, 94, 0.35),
+          inset 0 0 0 3px rgba(255, 255, 255, 0.25);
+      }
+
+      .machine-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        padding: 18px 22px;
+        background: #f8fafc;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .machine-item {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 9px;
+        padding: 12px;
+        text-align: center;
+      }
+
+      .machine-item span {
+        display: block;
+      }
+
+      .machine-title {
+        font-size: 11px;
+        color: #94a3b8;
+        font-weight: bold;
+        margin-bottom: 6px;
+      }
+
+      .machine-value {
+        font-size: 13px;
+        color: #334155;
+        font-weight: bold;
+      }
+
+      #error {
+        color: #dc2626;
+        font-size: 13px;
+        font-weight: bold;
+        margin: 10px 0 0;
+      }
+
+      .footer {
+        margin-top: 18px;
+        text-align: center;
+        color: #94a3b8;
+        font-size: 12px;
+      }
+
+      @media (max-width: 760px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .card.full-width {
+          grid-column: auto;
+        }
+
+        .top-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .machine-strip {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="dashboard">
+      <div class="top-header">
+        <div>
+          <h1 class="title">Jenkins Deployment Monitor</h1>
           <p class="subtitle">
-            Live communication between Web and API services
+            Live CI/CD service and Blue/Green deployment status
           </p>
+        </div>
 
-          <section class="card">
-            <div class="card-header">
-              <h2>API Monitor</h2>
-              <span class="status-badge" id="status"> Loading... </span>
-            </div>
+        <div class="system-label">JENKINS TWO-SERVICE SYSTEM</div>
+      </div>
 
+      <div class="grid">
+        <!-- API SERVICE -->
+        <section class="card">
+          <div class="card-header">
+            <h2>API Service</h2>
+
+            <span class="status-badge">
+              <span class="status-dot"></span>
+              <span id="status">Loading...</span>
+            </span>
+          </div>
+
+          <div class="card-body">
             <div class="row">
-              <span class="label">Service</span>
+              <span class="label">SERVICE</span>
               <span class="value" id="service">Loading...</span>
             </div>
 
             <div class="row">
-              <span class="label">Message</span>
+              <span class="label">MESSAGE</span>
               <span class="value" id="message">Loading...</span>
             </div>
 
             <div class="row">
-              <span class="label">Server Time</span>
+              <span class="label">SERVER TIME</span>
               <span class="value" id="time">Loading...</span>
             </div>
+          </div>
+        </section>
 
+        <!-- DEPLOYMENT -->
+        <section class="card">
+          <div class="card-header">
+            <h2>Active Deployment</h2>
+
+            <div class="deployment-box">
+              <div id="slot-light" class="slot-light"></div>
+              <span id="deployment-slot" class="slot-name"> Loading... </span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="row">
+              <span class="label">HEALTH STATUS</span>
+              <span class="value" id="health-status">Loading...</span>
+            </div>
+
+            <div class="row">
+              <span class="label">JENKINS BUILD</span>
+              <span class="value" id="build-number">Loading...</span>
+            </div>
+
+            <div class="row">
+              <span class="label">GIT COMMIT</span>
+              <span class="value" id="commit-id">Loading...</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- PIPELINE MACHINE -->
+        <section class="card full-width">
+          <div class="card-header">
+            <h2>Deployment Pipeline</h2>
+
+            <span class="status-badge"> SYSTEM ONLINE </span>
+          </div>
+
+          <div class="machine-strip">
+            <div class="machine-item">
+              <span class="machine-title">WEB</span>
+              <span class="machine-value">NGINX</span>
+            </div>
+
+            <div class="machine-item">
+              <span class="machine-title">API</span>
+              <span class="machine-value">NODE.JS</span>
+            </div>
+
+            <div class="machine-item">
+              <span class="machine-title">NETWORK</span>
+              <span class="machine-value">DOCKER</span>
+            </div>
+
+            <div class="machine-item">
+              <span class="machine-title">DEPLOYMENT</span>
+              <span class="machine-value">BLUE / GREEN</span>
+            </div>
+          </div>
+
+          <div class="card-body">
             <p id="error"></p>
-          </section>
-
-          <div class="row">
-            <span class="label">HEALTH STATUS</span>
-            <span class="value" id="health-status">Loading...</span>
           </div>
+        </section>
+      </div>
 
-          <div class="row">
-            <span class="label">JENKINS BUILD</span>
-            <span class="value" id="build-number">Loading...</span>
-          </div>
+      <div class="footer">
+        Jenkins CI/CD Assignment · Two Service Deployment System
+      </div>
+    </main>
 
-          <div class="row">
-            <span class="label">COMMIT</span>
-            <span class="value" id="commit-id">Loading...</span>
-          </div>
-
-          <!--  -->
-          <div class="row">
-            <span class="label">DEPLOYMENT SLOT</span>
-            <span class="value" id="deployment-slot">Loading...</span>
-          </div>
-
-          <div class="row">
-            <span class="label">ACTIVE BUILD</span>
-            <span class="value" id="build-number">Loading...</span>
-          </div>
-
-          <div class="row">
-            <span class="label">COMMIT</span>
-            <span class="value" id="commit-id">Loading...</span>
-          </div>
-
-          <div class="row">
-            <span class="label">DEPLOYMENT SLOT</span>
-            <span class="value" id="deployment-slot">Loading...</span>
-          </div>
-        </main>
-
-        <script src="./script.js"></script>
-      </body>
-    </html>
-  </head>
+    <script src="./script.js"></script>
+  </body>
 </html>
