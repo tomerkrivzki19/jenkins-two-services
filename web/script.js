@@ -21,4 +21,23 @@ async function getApiData() {
   }
 }
 
+async function getHealthData() {
+  try {
+    const response = await fetch("/api/health");
+    const health = await response.json();
+
+    console.log(health);
+
+    document.getElementById("health-status").textContent = health.status;
+    document.getElementById("build-number").textContent =
+      health.build || "local";
+    document.getElementById("commit-id").textContent = health.commit || "local";
+  } catch (error) {
+    console.error("Failed to get health data:", error);
+
+    document.getElementById("health-status").textContent = "offline";
+  }
+}
+
 getApiData();
+getHealthData();

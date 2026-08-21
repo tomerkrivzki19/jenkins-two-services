@@ -3,9 +3,9 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-      args:
-        BUILD_NUMBER: "123"
-        GIT_COMMIT: "abcdefg"
+      # args:
+      #   BUILD_NUMBER: "123"
+      #   GIT_COMMIT: "abcdefg"
     image: jenkins-api
     # ports:
     #   - "3001:3001"

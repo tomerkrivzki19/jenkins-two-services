@@ -41,11 +41,14 @@ pipeline {
             steps {
                 sh '''
                     docker build \
+                    --build-arg BUILD_NUMBER=$BUILD_NUMBER \
+                    --build-arg GIT_COMMIT=$(git rev-parse --short=7 HEAD) \
                     -t jenkins-web:$BUILD_NUMBER \
                     ./web
                 '''
             }
         }
+        
         stage('Integration Test') {
             steps {
                 sh '''

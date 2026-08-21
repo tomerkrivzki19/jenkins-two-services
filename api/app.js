@@ -5,8 +5,9 @@ const cors = require("cors");
 const app = express();
 
 // const PORT = 3001;
-const BUILD_NUMBER = process.env.BUILD_NUMBER;
-const GIT_COMMIT = process.env.GIT_COMMIT;
+const BUILD_NUMBER = process.env.BUILD_NUMBER || "local";
+const GIT_COMMIT = process.env.GIT_COMMIT || "local";
+
 app.use(cors());
 
 // app.get("/", (req, res) => {
