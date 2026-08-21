@@ -65,12 +65,12 @@ pipeline {
                     docker run -d \
                     --name test-web \
                     --network jenkins-test-network \
-                    -p 8081:80 \
+                    -p 8082:80 \
                     jenkins-web:$BUILD_NUMBER
 
                     sleep 5
 
-                    curl --fail http://localhost:8081/api/data
+                    curl --fail http://localhost:8082/api/data
 
                     docker rm -f test-web test-api
                     docker network rm jenkins-test-network
