@@ -46,20 +46,34 @@ pipeline {
                 '''
             }
         }
-        stage('Integration Test') {
+     stage('Integration Test') {
             steps {
                 sh '''
                     set -e
 
-                    docker compose down || true
+                    docker rm -f test-api test-web 2>/dev/null || true
+                    docker network rm jenkins-test-network 2>/dev/null || true
 
-                    trap 'docker compose down' EXIT
+                    docker network create jenkins-test-network
 
-                    docker compose up -d --build
+                    docker run -d \
+                    --name test-api \
+                    --network jenkins-test-network \
+                    --network-alias api \
+                    jenkins-api:$BUILD_NUMBER
+
+                    docker run -d \
+                    --name test-web \
+                    --network jenkins-test-network \
+                    -p 8081:80 \
+                    jenkins-web:$BUILD_NUMBER
 
                     sleep 5
 
                     curl --fail http://localhost:8081/api/data
+
+                    docker rm -f test-web test-api
+                    docker network rm jenkins-test-network
                 '''
             }
         }
