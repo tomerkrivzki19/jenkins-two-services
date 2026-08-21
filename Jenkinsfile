@@ -46,7 +46,7 @@ pipeline {
                 '''
             }
         }
-     stage('Integration Test') {
+        stage('Integration Test') {
             steps {
                 sh '''
                     set -e
@@ -65,12 +65,11 @@ pipeline {
                     docker run -d \
                     --name test-web \
                     --network jenkins-test-network \
-                    -p 8082:80 \
                     jenkins-web:$BUILD_NUMBER
 
                     sleep 5
 
-                    curl --fail http://localhost:8082/api/data
+                    docker exec test-web wget -qO- http://localhost/api/data
 
                     docker rm -f test-web test-api
                     docker network rm jenkins-test-network
