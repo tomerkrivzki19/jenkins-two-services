@@ -86,15 +86,17 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Blue Green Deploy') {
             when {
                 branch 'main'
             }
 
             steps {
-                echo "Deploying build ${BUILD_NUMBER} from branch ${BRANCH_NAME}"
+                sh '''
+                    chmod +x scripts/deploy-blue-green.sh
+                    ./scripts/deploy-blue-green.sh
+                '''
             }
-        }   
-    }
+        }
 
 }

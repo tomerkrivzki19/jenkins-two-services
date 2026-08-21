@@ -39,5 +39,20 @@ async function getHealthData() {
   }
 }
 
+async function getDeploymentSlot() {
+  try {
+    const response = await fetch("/deployment.json");
+    const deployment = await response.json();
+
+    document.getElementById("deployment-slot").textContent =
+      deployment.slot.toUpperCase();
+  } catch (error) {
+    console.error("Failed to get deployment slot:", error);
+
+    document.getElementById("deployment-slot").textContent = "UNKNOWN";
+  }
+}
+
 getApiData();
 getHealthData();
+getDeploymentSlot();
