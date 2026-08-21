@@ -17,3 +17,23 @@ describe("API routes", () => {
     expect(response.body.status).toBe("ok");
   });
 });
+
+describe("Health build information", () => {
+  test("uses Jenkins environment variables when provided", async () => {
+    process.env.BUILD_NUMBER = "25";
+    process.env.GIT_COMMIT = "abc1234";
+
+    jest.resetModules();
+
+    const appWithBuildInfo = require("./app");
+
+    const response = await request(appWithBuildInfo).get("/health");
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.build).toBe("25");
+    expect(response.body.commit).toBe("abc1234");
+
+    delete process.env.BUILD_NUMBER;
+    delete process.env.GIT_COMMIT;
+  });
+});
