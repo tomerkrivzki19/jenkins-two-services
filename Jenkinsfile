@@ -7,6 +7,12 @@ pipeline {
                 checkout scm
             }
         }
+    
+        stage('Branch Info') {
+            steps {
+                echo "Current branch: ${BRANCH_NAME}"
+            }
+        }
 
         stage('Install API Dependencies') {
             steps {
@@ -80,5 +86,15 @@ pipeline {
             }
         }
 
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
+
+            steps {
+                echo "Deploying build ${BUILD_NUMBER} from branch ${BRANCH_NAME}"
+            }
+        }   
     }
+
 }
