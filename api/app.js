@@ -25,7 +25,22 @@ app.get("/data", (req, res) => {
   res.json({ data });
 });
 
+// app.get("/health", (req, res) => {
+//   res.json({
+//     status: "ok",
+//     build: BUILD_NUMBER,
+//     commit: GIT_COMMIT,
+//   });
+// });
 app.get("/health", (req, res) => {
+  if (process.env.FORCE_HEALTH_FAIL === "true") {
+    return res.status(500).json({
+      status: "error",
+      build: BUILD_NUMBER,
+      commit: GIT_COMMIT,
+    });
+  }
+
   res.json({
     status: "ok",
     build: BUILD_NUMBER,
