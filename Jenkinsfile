@@ -46,5 +46,23 @@ pipeline {
                 '''
             }
         }
+        stage('Integration Test') {
+            steps {
+                sh '''
+                    set -e
+
+                    docker compose down || true
+
+                    trap 'docker compose down' EXIT
+
+                    docker compose up -d --build
+
+                    sleep 5
+
+                    curl --fail http://localhost:8081/api/data
+                '''
+            }
+        }
+
     }
 }
