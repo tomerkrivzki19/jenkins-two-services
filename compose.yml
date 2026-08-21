@@ -15,8 +15,8 @@ services:
     build:
       context: ./web
       dockerfile: Dockerfile
-      args:
-        DEPLOYMENT_SLOT: "blue"
+      # args:
+      #   DEPLOYMENT_SLOT: "blue"
     image: jenkins-web
     ports:
       - "8081:80"

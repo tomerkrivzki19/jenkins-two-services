@@ -87,16 +87,17 @@ pipeline {
         }
 
         stage('Blue Green Deploy') {
-            when {
-                branch 'main'
-            }
-
-            steps {
-                sh '''
-                    chmod +x scripts/deploy-blue-green.sh
-                    ./scripts/deploy-blue-green.sh
-                '''
-            }
+        when {
+            branch 'main'
         }
 
+        steps {
+            sh '''
+                chmod +x scripts/deploy-blue-green.sh
+                ./scripts/deploy-blue-green.sh
+            '''
+        }
+    }
+
+}
 }
